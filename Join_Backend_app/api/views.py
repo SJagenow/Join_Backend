@@ -7,7 +7,14 @@ from Join_Backend_app.api.serializers import ProfileSerializer
 from Join_Backend_app.models import Profile , Tasks
 
 
-class profileView(generics.ListCreateAPIView):
+class ProfileView(generics.ListCreateAPIView):
    
    queryset = Profile.objects.all()
    serializer_class = ProfileSerializer
+
+
+class ProfileSingleView(generics.RetrieveUpdateDestroyAPIView):
+   
+   queryset = Profile.objects.all()
+   serializer_class = ProfileSerializer
+
