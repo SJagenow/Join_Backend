@@ -5,7 +5,7 @@ from django.db import models
 class Profile(models.Model):
     name = models.CharField(max_length=40)
     email =  models.CharField(max_length=40)
-    phone = models.DecimalField(max_digits=20, decimal_places=5)
+    phone = models.DecimalField(max_digits=20, decimal_places=0)
 
     def __str__(self):
         return self.name
