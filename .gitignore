@@ -1,0 +1,10 @@
+# Ignoriere virtuelle Umgebungen
+venv/
+env/
+
+# Ignoriere andere typische Dateien und Verzeichnisse
+*.pyc
+__pycache__/
+*.log
+*.sqlite3
+.DS_Store

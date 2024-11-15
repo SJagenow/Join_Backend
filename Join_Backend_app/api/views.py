@@ -1,0 +1,13 @@
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import mixins,generics,viewsets
+from rest_framework import status
+from Join_Backend_app.api.serializers import ProfileSerializer
+from Join_Backend_app.models import Profile , Tasks
+
+
+class profileView(generics.ListCreateAPIView):
+   
+   queryset = Profile.objects.all()
+   serializer_class = ProfileSerializer
