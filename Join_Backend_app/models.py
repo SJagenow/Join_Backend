@@ -13,11 +13,12 @@ class Profile(models.Model):
     
 
 class Tasks(models.Model):
+    PRIORITY_CHOICES = [ ('low', 'Low'), ('medium', 'Medium'), ('urgent', 'Urgent'), ]
     title = models.CharField(max_length=50) 
     description = models.TextField()
     contacts = models.CharField(max_length=50)
-    dueDate = models.DecimalField(max_digits=50,decimal_places=4)
-    priority   = models.CharField(max_length=20)
+    dueDate = models.DateField()
+    priority   = models.CharField(max_length=20, choices=PRIORITY_CHOICES)
     category = models.CharField(max_length=20)
     subtasks = models.CharField(max_length=20)
 

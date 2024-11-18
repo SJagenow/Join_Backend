@@ -7,3 +7,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+
+class TaskSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tasks
+        fields = '__all__'
