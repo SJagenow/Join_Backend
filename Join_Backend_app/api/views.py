@@ -3,8 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import mixins,generics,viewsets
 from rest_framework import status
-from Join_Backend_app.api.serializers import ProfileSerializer, TaskSerializer
-from Join_Backend_app.models import Profile , Tasks
+from Join_Backend_app.api.serializers import ProfileSerializer, SubtaskSerializer, TaskSerializer
+from Join_Backend_app.models import Profile, Tasks, Subtask
 
 
 class ProfileView(generics.ListCreateAPIView):
@@ -27,3 +27,12 @@ class TaskSingleView(generics.RetrieveUpdateDestroyAPIView):
 
    queryset = Tasks.objects.all()
    serializer_class = TaskSerializer
+
+
+class SubtaskView(generics.ListCreateAPIView):
+    queryset = Subtask.objects.all()
+    serializer_class = SubtaskSerializer
+
+class SubtaskSingleView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Subtask.objects.all()
+    serializer_class = SubtaskSerializer
