@@ -33,6 +33,8 @@ class SubtaskView(generics.ListCreateAPIView):
     queryset = Subtask.objects.all()
     serializer_class = SubtaskSerializer
 
+
+
 class SubtaskSingleView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Subtask.objects.all()
     serializer_class = SubtaskSerializer

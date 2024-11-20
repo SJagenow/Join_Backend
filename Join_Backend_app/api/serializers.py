@@ -8,20 +8,21 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = '__all__'
 
-class SubtaskSerializer(serializers.ModelSerializer): 
+
+        
+
+class SubtaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subtask
         fields = '__all__'
-        
+
 
 class TaskSerializer(serializers.ModelSerializer):
+    subtasks = SubtaskSerializer(many=True, read_only=True)  
 
-
-   class Meta:
+    class Meta:
         model = Tasks
         fields = '__all__'
-
-
 
 
         
