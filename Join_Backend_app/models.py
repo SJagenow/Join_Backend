@@ -22,14 +22,14 @@ class Tasks(models.Model):
      priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES)
      category = models.CharField(max_length=20)
    
+
      def __str__(self): 
       return self.title
      
-class Subtask(models.Model): 
-    title = models.CharField(max_length=100, default='Default Title') 
-    done = models.BooleanField(default=False)
-    task = models.ForeignKey(Tasks, related_name='subtasks', on_delete=models.CASCADE, null=True, blank=True) 
+class Subtask(models.Model):
+    title = models.CharField(max_length=100)
    
     def __str__(self):
-       return self.title
+        return self.title
+
     
