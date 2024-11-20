@@ -6,8 +6,8 @@ from Join_Backend_app.api.views import  ProfileSingleView, ProfileView, SubtaskS
 
 urlpatterns = [
  
-    path('contacts/', ProfileView.as_view()),
-    path('contacts/<pk>/', ProfileSingleView.as_view()),
+    path('contacts/', ProfileView.as_view(),name='task-list'),
+    path('contacts/<pk>/', ProfileSingleView.as_view(),name='subtask-list'),
     path('tasks/',TaskView.as_view()),
     path('tasks/<pk>/',TaskSingleView.as_view()),
     path('subtask/',SubtaskView.as_view()),

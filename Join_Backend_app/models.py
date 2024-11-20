@@ -22,7 +22,7 @@ class Tasks(models.Model):
      dueDate = models.DateField()
      priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES)
      category = models.CharField(max_length=20)
-  
+     label = models.CharField(max_length=20, default='No Label')
 
      def __str__(self): 
       return self.title
