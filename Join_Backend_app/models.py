@@ -30,7 +30,7 @@ class Tasks(models.Model):
 class Subtask(models.Model):
     title = models.CharField(max_length=100)
     task = models.ForeignKey(Tasks, on_delete=models.CASCADE, related_name='subtasks')
-    status = models.BooleanField(default=False)
+    done = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.title} (Task: {self.task.title})"

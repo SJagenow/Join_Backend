@@ -11,12 +11,19 @@ class ProfileView(generics.ListCreateAPIView):
    
    queryset = Profile.objects.all()
    serializer_class = ProfileSerializer
+     
+   def perform_create(self, serializer):
+       serializer.save() 
 
 
 class ProfileSingleView(generics.RetrieveUpdateDestroyAPIView):
    
    queryset = Profile.objects.all()
    serializer_class = ProfileSerializer
+
+   def get_object(self):
+       # Hier holen wir die "contactId" aus der URL und nutzen sie, um das richtige Objekt zu finden
+       return get_object_or_404(Profile, id=self.kwargs['contactId'])
  
 class TaskView(generics.ListCreateAPIView):
    
