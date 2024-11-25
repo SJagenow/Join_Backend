@@ -15,7 +15,7 @@ class Profile(models.Model):
     
 
 class Tasks(models.Model):
-     PRIORITY_CHOICES = [ ('low', 'Low'), ('medium', 'Medium'), ('urgent', 'Urgent'), ]
+     PRIORITY_CHOICES = [ ('urgent', 'Urgent'), ('medium', 'Medium'), ('low', 'Low'), ]
      title = models.CharField(max_length=50)
      description = models.TextField()
      contacts = models.CharField(max_length=50)
@@ -28,7 +28,7 @@ class Tasks(models.Model):
       return self.title
      
 class Subtask(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, default='No Title')
     task = models.ForeignKey(Tasks, on_delete=models.CASCADE, related_name='subtasks')
     done = models.BooleanField(default=False)
 

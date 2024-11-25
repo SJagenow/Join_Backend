@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -22,8 +23,13 @@ class ProfileSingleView(generics.RetrieveUpdateDestroyAPIView):
    serializer_class = ProfileSerializer
 
    def get_object(self):
-       # Hier holen wir die "contactId" aus der URL und nutzen sie, um das richtige Objekt zu finden
-       return get_object_or_404(Profile, id=self.kwargs['contactId'])
+    contactId = self.kwargs.get('contactId')
+    try:
+        return get_object_or_404(Profile, id=contactId)
+    except Http404:
+        print(f"Kein Kontakt mit der ID {contactId} gefunden.")
+        raise
+
  
 class TaskView(generics.ListCreateAPIView):
    
