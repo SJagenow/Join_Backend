@@ -32,9 +32,19 @@ class ProfileSingleView(generics.RetrieveUpdateDestroyAPIView):
 
  
 class TaskView(generics.ListCreateAPIView):
-   
-   queryset = Tasks.objects.all()
-   serializer_class = TaskSerializer
+    queryset = Tasks.objects.all()
+    serializer_class = TaskSerializer
+
+    def perform_create(self, serializer):
+     
+        task = serializer.save()
+
+      
+        subtasks_data = self.request.data.get('subtasks', [])
+        for subtask_data in subtasks_data:
+        
+            Subtask.objects.create(task=task, **subtask_data)
+
 
 
 class TaskSingleView(generics.RetrieveUpdateDestroyAPIView):

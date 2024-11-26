@@ -18,7 +18,7 @@ class Tasks(models.Model):
      PRIORITY_CHOICES = [ ('urgent', 'Urgent'), ('medium', 'Medium'), ('low', 'Low'), ]
      title = models.CharField(max_length=50)
      description = models.TextField()
-     contacts = models.CharField(max_length=50)
+     contacts = models.ManyToManyField(Profile, related_name='tasks')
      dueDate = models.DateField()
      priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES)
      category = models.CharField(max_length=20)

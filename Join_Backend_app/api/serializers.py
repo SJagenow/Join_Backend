@@ -14,15 +14,27 @@ class ProfileSerializer(serializers.ModelSerializer):
 class SubtaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subtask
-        fields = '__all__'
-
+        fields = ['title', 'done']
 
 class TaskSerializer(serializers.ModelSerializer):
-    subtasks = SubtaskSerializer(many=True)  
+    subtasks = SubtaskSerializer(many=True, required=False) 
 
     class Meta:
         model = Tasks
-        fields = '__all__'
+        fields = ['id', 'title', 'description', 'contacts', 'dueDate', 'priority', 'category', 'label', 'subtasks']
+
+    def create(self, validated_data):
+       
+        subtasks_data = validated_data.pop('subtasks', [])
+        
+      
+        task = Tasks.objects.create(**validated_data)
+        
+       
+        for subtask_data in subtasks_data:
+            Subtask.objects.create(task=task, **subtask_data)
+        
+        return task
 
 
         
