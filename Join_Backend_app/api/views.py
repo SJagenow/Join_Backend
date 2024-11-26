@@ -31,17 +31,20 @@ class TaskView(generics.ListCreateAPIView):
     serializer_class = TaskSerializer
 
     def perform_create(self, serializer):
-        task = serializer.save()
-
+        task = serializer.save()  
         subtasks_data = self.request.data.get('subtasks', [])
+        
+        
         if subtasks_data:
             for subtask_data in subtasks_data:
-                subtask_data['task'] = task.id  # Ensure task is linked to subtask
+                subtask_data['task'] = task.id 
                 subtask_serializer = SubtaskSerializer(data=subtask_data)
                 if subtask_serializer.is_valid():
                     subtask_serializer.save()
                 else:
                     raise serializers.ValidationError(f"Invalid subtask data: {subtask_serializer.errors}")
+
+
 
 
 class TaskSingleView(generics.RetrieveUpdateDestroyAPIView):

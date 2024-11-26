@@ -23,17 +23,14 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'contacts', 'dueDate', 'priority', 'category', 'label', 'subtasks']
 
     def create(self, validated_data):
-     
         subtasks_data = validated_data.pop('subtasks', [])
-        
-     
-        task = Tasks.objects.create(**validated_data)
+        task = Tasks.objects.create(**validated_data) 
 
-       
         for subtask_data in subtasks_data:
-            Subtask.objects.create(task=task, **subtask_data)
+            Subtask.objects.create(task=task, **subtask_data)  
 
         return task
+
 
 
         
