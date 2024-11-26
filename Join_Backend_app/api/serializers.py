@@ -6,9 +6,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = '__all__'
-
-
+        fields = ['id', 'name', 'mail', 'phone'] 
         
 
 class SubtaskSerializer(serializers.ModelSerializer):
@@ -17,23 +15,24 @@ class SubtaskSerializer(serializers.ModelSerializer):
         fields = ['title', 'done']
 
 class TaskSerializer(serializers.ModelSerializer):
-    subtasks = SubtaskSerializer(many=True, required=False) 
+    subtasks = SubtaskSerializer(many=True, required=False)
+    contacts = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all(), many=True)
 
     class Meta:
         model = Tasks
         fields = ['id', 'title', 'description', 'contacts', 'dueDate', 'priority', 'category', 'label', 'subtasks']
 
     def create(self, validated_data):
-       
+     
         subtasks_data = validated_data.pop('subtasks', [])
         
-      
+     
         task = Tasks.objects.create(**validated_data)
-        
+
        
         for subtask_data in subtasks_data:
             Subtask.objects.create(task=task, **subtask_data)
-        
+
         return task
 
 
