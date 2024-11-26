@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -24,6 +24,17 @@ class ProfileSingleView(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         contact_id = self.kwargs.get('contactId')
         return get_object_or_404(Profile, id=contact_id)
+    
+class ProfileInitialsView(generics.GenericAPIView):
+    serializer_class = ProfileSerializer
+
+    def get(self, request, contactId):
+        try:
+            contact = Profile.objects.get(id=contactId)
+            initials = contact.first_name[0] + contact.last_name[0]  # Erste Buchstaben des Vor- und Nachnamens
+            return JsonResponse({'initials': initials})
+        except Profile.DoesNotExist:
+            return JsonResponse({'error': 'Contact not found'}, status=404)
 
 
 class TaskView(generics.ListCreateAPIView):
