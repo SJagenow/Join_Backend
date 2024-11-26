@@ -16,12 +16,18 @@ class Profile(models.Model):
 
 class Tasks(models.Model):
      PRIORITY_CHOICES = [ ('urgent', 'Urgent'), ('medium', 'Medium'), ('low', 'Low'), ]
+     CATEGORY_CHOICES = [
+        ('todo', 'Todo'),
+        ('inprogress', 'In Progress'),
+        ('await', 'Awaiting Feedback'),
+        ('done', 'Done'),
+    ]
      title = models.CharField(max_length=50)
      description = models.TextField()
      contacts = models.ManyToManyField(Profile, related_name='tasks')
      dueDate = models.DateField()
      priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES)
-     category = models.CharField(max_length=20)
+     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='todo')
      label = models.CharField(max_length=20, default='No Label')
 
      def __str__(self): 
