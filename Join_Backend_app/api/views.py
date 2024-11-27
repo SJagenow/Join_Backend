@@ -31,7 +31,7 @@ class ProfileInitialsView(generics.GenericAPIView):
     def get(self, request, contactId):
         try:
             contact = Profile.objects.get(id=contactId)
-            initials = contact.first_name[0] + contact.last_name[0]  # Erste Buchstaben des Vor- und Nachnamens
+            initials = contact.first_name[0] + contact.last_name[0]  
             return JsonResponse({'initials': initials})
         except Profile.DoesNotExist:
             return JsonResponse({'error': 'Contact not found'}, status=404)
@@ -71,3 +71,8 @@ class SubtaskView(generics.ListCreateAPIView):
 class SubtaskSingleView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Subtask.objects.all()
     serializer_class = SubtaskSerializer
+
+class ContactDetailView(generics.RetrieveAPIView):
+    queryset = Profile.objects.all()  
+    serializer_class = ProfileSerializer  
+    lookup_field = 'name'
