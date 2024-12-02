@@ -24,17 +24,6 @@ class ProfileSingleView(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         contact_id = self.kwargs.get('contactId')
         return get_object_or_404(Profile, id=contact_id)
-    
-class ProfileInitialsView(generics.GenericAPIView):
-    serializer_class = ProfileSerializer
-
-    def get(self, request, contactId):
-        try:
-            contact = Profile.objects.get(id=contactId)
-            initials = contact.first_name[0] + contact.last_name[0]  
-            return JsonResponse({'initials': initials})
-        except Profile.DoesNotExist:
-            return JsonResponse({'error': 'Contact not found'}, status=404)
 
 
 class TaskView(generics.ListCreateAPIView):
@@ -64,8 +53,14 @@ class TaskSingleView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class SubtaskView(generics.ListCreateAPIView):
-    queryset = Subtask.objects.all()
     serializer_class = SubtaskSerializer
+
+    def get_queryset(self):
+        task_id = self.request.query_params.get('task_id')
+        if task_id:
+            return Subtask.objects.filter(task_id=task_id)
+        return Subtask.objects.all()
+
 
 
 class SubtaskSingleView(generics.RetrieveUpdateDestroyAPIView):
@@ -73,6 +68,6 @@ class SubtaskSingleView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SubtaskSerializer
 
 class ContactDetailView(generics.RetrieveAPIView):
-    queryset = Profile.objects.all()  
-    serializer_class = ProfileSerializer  
-    lookup_field = 'name'
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    
