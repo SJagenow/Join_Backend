@@ -51,6 +51,37 @@ class TaskSingleView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tasks.objects.all()
     serializer_class = TaskSerializer
 
+class TaskCountView(generics.GenericAPIView, mixins.ListModelMixin):
+    def get(self, request, *args, **kwargs):
+        count_todo = Tasks.objects.filter(category='todos').count()
+        count_done = Tasks.objects.filter(category='done').count()
+        count_in_progress = Tasks.objects.filter(category='inprogress').count()
+        count_urgent = Tasks.objects.filter(priority='urgent').count()
+        count_await = Tasks.objects.filter(category='await').count()
+ # Alle Todos holen, um das nächste DueDate zu berechnen
+        all_tasks = Tasks.objects.filter(dueDate__isnull=False)  # Nur Tasks mit DueDate
+        next_due_date = None
+
+        for task in all_tasks:
+            if task.dueDate:
+                # Vergleiche das DueDate jeder Aufgabe und finde das nächstgelegene
+                if not next_due_date or task.dueDate < next_due_date:
+                    next_due_date = task.dueDate
+
+        # Wenn kein nächstes DueDate gefunden wurde, gib eine Nachricht zurück
+        next_due_date_str = next_due_date.strftime('%Y-%m-%d') if next_due_date else 'No upcoming deadlines'
+
+        # Antwort mit den Zählerdaten und dem nächsten DueDate
+        data = {
+            'todo_count': count_todo,
+            'done_count': count_done,
+            'in_progress_count': count_in_progress,
+            'urgent_count': count_urgent,
+            'await_count': count_await,
+            'next_due_date': next_due_date_str  # Füge das nächste DueDate hinzu
+        }
+
+        return Response(data)
 
 class SubtaskView(generics.ListCreateAPIView):
     serializer_class = SubtaskSerializer
