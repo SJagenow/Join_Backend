@@ -16,7 +16,7 @@ class SubtaskSerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
     subtasks = SubtaskSerializer(many=True, required=False)
-    contacts = ProfileSerializer(many=True)  
+    contacts = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all(), many=True)
     contacts_details = serializers.SerializerMethodField()
 
     class Meta:
@@ -24,20 +24,26 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'contacts', 'contacts_details', 'dueDate', 'priority', 'category', 'label', 'subtasks']
 
     def get_contacts_details(self, obj):
-        return [{"name": contact.name} for contact in obj.contacts.all()]
+       
+        return [{"id": contact.id, "name": contact.name or "No name"} for contact in obj.contacts.all()]
 
     def create(self, validated_data):
+   
         subtasks_data = validated_data.pop('subtasks', [])
-        contacts_data = validated_data.pop('contacts', [])
+        contacts = validated_data.pop('contacts', [])
 
         task = Tasks.objects.create(**validated_data)
 
+      
         for subtask_data in subtasks_data:
             Subtask.objects.create(task=task, **subtask_data)
 
-        task.contacts.set([contact['id'] for contact in contacts_data])  # IDs setzen
+      
+        task.contacts.set(contacts)
 
         return task
+
+
 
 
 
