@@ -39,7 +39,7 @@ class Tasks(models.Model):
     description = models.TextField()
     contacts = models.ManyToManyField(Profile, related_name='tasks')
     dueDate = models.DateField()
-    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES)
+    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default= 'Urgent')
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='todos')
     label = models.CharField(max_length=20, choices=LABEL_CHOICES, default='CSS')
 
