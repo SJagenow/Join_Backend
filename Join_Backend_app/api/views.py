@@ -17,13 +17,18 @@ class ProfileView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save()
 
+ 
 class ProfileSingleView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
     def get_object(self):
         contact_id = self.kwargs.get('contactId')
-        return get_object_or_404(Profile, id=contact_id)
+        try:
+            return get_object_or_404(Profile, id=contact_id)
+        except Http404:
+            raise Http404(f"Kontakt mit der ID {contact_id} nicht gefunden.")
+
 
 class TaskView(generics.ListCreateAPIView):
     queryset = Tasks.objects.all()
