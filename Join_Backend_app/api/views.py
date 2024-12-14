@@ -53,18 +53,17 @@ class TaskSingleView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TaskSerializer
 
     def perform_update(self, serializer):
-        task = serializer.save()  # Task wird zuerst gespeichert
+        task = serializer.save() 
         
-        subtasks_data = self.request.data.get('subtasks', [])  # Subtasks aus dem Request holen
+        subtasks_data = self.request.data.get('subtasks', [])  
         
-        if subtasks_data:  # Wenn Subtask-Daten vorhanden sind
+        if subtasks_data:  
             for subtask_data in subtasks_data:
-                # Update oder Erstelle die Subtask für das bestehende Task
-                # task wird durch die Beziehung in Subtask automatisch gesetzt
+                
                 Subtask.objects.update_or_create(
-                    task=task,  # task wird über das bestehende task-Objekt zugewiesen
+                    task=task, 
                     title=subtask_data.get('title'),
-                    defaults={'done': subtask_data.get('done')}  # Setze oder update das 'done' Flag
+                    defaults={'done': subtask_data.get('done')} 
                 )
 
 
