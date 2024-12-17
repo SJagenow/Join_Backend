@@ -23,6 +23,7 @@ class SubtaskSerializer(serializers.ModelSerializer):
         fields = ['title', 'done']
 
 
+
 class TaskSerializer(serializers.ModelSerializer):
     subtasks = SubtaskSerializer(many=True, required=False)
     contacts = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all(), many=True)
@@ -50,6 +51,7 @@ class TaskSerializer(serializers.ModelSerializer):
         subtasks_data = validated_data.pop('subtasks', [])
         contacts = validated_data.pop('contacts', [])
 
+    
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
         instance.dueDate = validated_data.get('dueDate', instance.dueDate)
@@ -71,7 +73,7 @@ class TaskSerializer(serializers.ModelSerializer):
                 subtask.done = subtask_data.get('done', subtask.done)
                 subtask.save()
             else:
-            
+         
                 new_subtasks.append(Subtask(task=instance, **subtask_data))
 
         for subtask in existing_subtasks.values():
@@ -79,6 +81,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
         Subtask.objects.bulk_create(new_subtasks)
 
+      
         instance.contacts.set(contacts)
         return instance
 

@@ -36,17 +36,26 @@ class TaskView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         task_data = self.request.data
-        task = serializer.save() 
-        
-        subtasks_data = task_data.get('subtasks', [])
-        if subtasks_data:
-            for subtask_data in subtasks_data:
-                subtask_data['task'] = task.id 
-                subtask_serializer = SubtaskSerializer(data=subtask_data)
-                if subtask_serializer.is_valid():
-                    subtask_serializer.save()
-                else:
-                    raise ValidationError(f"Invalid subtask data: {subtask_serializer.errors}")
+        try:
+            task = serializer.save() 
+            
+            subtasks_data = task_data.get('subtasks', [])
+            if subtasks_data:
+                for subtask_data in subtasks_data:
+                    subtask_data['task'] = task.id 
+                    subtask_serializer = SubtaskSerializer(data=subtask_data)
+                    if subtask_serializer.is_valid():
+                        subtask_serializer.save()
+                    else:
+                        raise ValidationError(f"Invalid subtask data: {subtask_serializer.errors}")
+        except ValidationError as e:
+            # Fehler bei der Subtask-Erstellung
+            return JsonResponse({"error": f"Validation error: {str(e)}"}, status=400)
+        except Exception as e:
+            # Allgemeiner Fehler
+            return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
+
+        return JsonResponse({"message": "Task created successfully!"}, status=201)
 
 class TaskSingleView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tasks.objects.all()
@@ -54,17 +63,25 @@ class TaskSingleView(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_update(self, serializer):
         task = serializer.save() 
-        
         subtasks_data = self.request.data.get('subtasks', [])  
         
-        if subtasks_data:  
-            for subtask_data in subtasks_data:
-                
-                Subtask.objects.update_or_create(
-                    task=task, 
-                    title=subtask_data.get('title'),
-                    defaults={'done': subtask_data.get('done')} 
-                )
+        try:
+            if subtasks_data:  
+                for subtask_data in subtasks_data:
+                    Subtask.objects.update_or_create(
+                        task=task, 
+                        title=subtask_data.get('title'),
+                        defaults={'done': subtask_data.get('done')} 
+                    )
+        except ValidationError as e:
+            # Fehler bei der Subtask-Aktualisierung
+            return JsonResponse({"error": f"Validation error: {str(e)}"}, status=400)
+        except Exception as e:
+            # Allgemeiner Fehler
+            return JsonResponse({"error": f"An unexpected error occurred: {str(e)}"}, status=500)
+
+        return JsonResponse({"message": "Task updated successfully!"}, status=200)
+
 
 
 class SubtaskView(generics.ListCreateAPIView):
@@ -73,8 +90,12 @@ class SubtaskView(generics.ListCreateAPIView):
     def get_queryset(self):
         task_id = self.request.query_params.get('task_id')
         if task_id:
-            return Subtask.objects.filter(task_id=task_id)
+            try:
+                return Subtask.objects.filter(task_id=task_id)
+            except Exception as e:
+                return JsonResponse({"error": f"Failed to fetch subtasks: {str(e)}"}, status=500)
         return Subtask.objects.all()
+
 
 class SubtaskSingleView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Subtask.objects.all()
